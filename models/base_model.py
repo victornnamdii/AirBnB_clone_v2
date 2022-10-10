@@ -22,10 +22,10 @@ class BaseModel:
                     setattr(self, key, value)
             if hasattr(self, "created_at") and type(self.created_at) is str:
                 self.created_at = datetime.strptime(kwargs["created_at"],
-                                                date_format)
+                                                    date_format)
             if hasattr(self, "updated_at") and type(self.updated_at) is str:
                 self.updated_at = datetime.strptime(kwargs["updated_at"],
-                                                date_format)
+                                                    date_format)
             if not hasattr(self, "id"):
                 self.id = str(uuid.uuid4())
                 self.created_at = datetime.now()
