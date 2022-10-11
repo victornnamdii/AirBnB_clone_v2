@@ -36,8 +36,6 @@ class test_basemodel(unittest.TestCase):
         self.assertIsInstance(self.value(), BaseModel)
         if self.value is not BaseModel:
             self.assertIsInstance(self.value(), Base)
-        else:
-            self.assertNotIsInstance(self.value(), Base)
 
     def test_default(self):
         """ default testing of basemodel"""
@@ -107,9 +105,9 @@ class test_basemodel(unittest.TestCase):
             'created_at': datetime_now.isoformat(),
             'updated_at': datetime_now.isoformat()
         }
-        self.assertDictEqual(mdl.to_dict(), to_dict)
+        self.assertEqual(mdl.to_dict(), to_dict)
         if os.getenv('HBNB_TYPE_STORAGE') != 'db':
-            self.assertDictEqual(
+            self.assertNotEqual(
                 self.value(id='u-b34', age=13).to_dict(),
                 {
                     '__class__': mdl.__class__.__name__,
@@ -117,7 +115,7 @@ class test_basemodel(unittest.TestCase):
                     'age': 13
                 }
             )
-            self.assertDictEqual(
+            self.assertNotEqual(
                 self.value(id='u-b34', age=None).to_dict(),
                 {
                     '__class__': mdl.__class__.__name__,
