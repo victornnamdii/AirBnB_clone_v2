@@ -10,6 +10,9 @@ import pycodestyle
 import sys
 import unittest
 from unittest.mock import patch
+import os
+import sqlalchemy
+import MySQLdb
 HBNBCommand = console.HBNBCommand
 
 
@@ -102,6 +105,8 @@ class TestConsoleFunc(unittest.TestCase):
             HBNBCommand().onecmd("help default")
             self.assertEqual(f.getvalue(), out9)
 
+    @unittest.skipIf(
+        os.getenv('HBNB_TYPE_STORAGE') == 'db', 'FileStorage test')
     def test_create(self):
         """
         Testing create method
@@ -133,6 +138,33 @@ class TestConsoleFunc(unittest.TestCase):
             HBNBCommand().onecmd("all State")
             self.assertTrue("California" in f.getvalue())
 
+    def test_db_create(self):
+        """Tests the create command with the database storage.
+        """
+        with patch('sys.stdout', new=StringIO()) as cout:
+            cons = HBNBCommand()
+            # creating a model with non-null attribute(s)
+            with self.assertRaises(sqlalchemy.exc.OperationalError):
+                cons.onecmd('create User')
+            # creating a User instance
+            cons.onecmd('create User email="john25@gmail.com" password="123"')
+            mdl_id = cout.getvalue().strip()
+            dbc = MySQLdb.connect(
+                host=os.getenv('HBNB_MYSQL_HOST'),
+                port=3306,
+                user=os.getenv('HBNB_MYSQL_USER'),
+                passwd=os.getenv('HBNB_MYSQL_PWD'),
+                db=os.getenv('HBNB_MYSQL_DB')
+            )
+            cursor = dbc.cursor()
+            cursor.execute('SELECT * FROM users WHERE id="{}"'.format(mdl_id))
+            result = cursor.fetchone()
+            self.assertFalse(result is not None)
+            cursor.close()
+            dbc.close()
+
+    @unittest.skipIf(
+        os.getenv('HBNB_TYPE_STORAGE') == 'db', 'DBStorage test')
     def test_show(self):
         """
         Testing show method
@@ -164,6 +196,8 @@ class TestConsoleFunc(unittest.TestCase):
             HBNBCommand().onecmd(f"show Amenity {uuid}")
             self.assertEqual(f.getvalue()[37:46], "[Amenity]")
 
+    @unittest.skipIf(
+        os.getenv('HBNB_TYPE_STORAGE') == 'db', 'DBStorage test')
     def test_destroy(self):
         """
         Testing destroy method
@@ -196,6 +230,8 @@ class TestConsoleFunc(unittest.TestCase):
             HBNBCommand().onecmd(f"show BaseModel {uuid}")
             self.assertEqual(f.getvalue()[37:], error)
 
+    @unittest.skipIf(
+        os.getenv('HBNB_TYPE_STORAGE') == 'db', 'DBStorage test')
     def test_all(self):
         """
         Testing all method
@@ -220,6 +256,8 @@ class TestConsoleFunc(unittest.TestCase):
             self.assertTrue("BaseModel" in hold2)
             self.assertTrue("State" in hold2)
 
+    @unittest.skipIf(
+        os.getenv('HBNB_TYPE_STORAGE') == 'db', 'DBStorage test')
     def test_update(self):
         """
         Testing update method
