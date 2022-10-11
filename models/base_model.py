@@ -7,7 +7,10 @@ from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 
 date_format = "%Y-%m-%dT%H:%M:%S.%f"
-Base = declarative_base()
+if models.req_storage == "db":
+    Base = declarative_base()
+else:
+    Base = object
 
 
 class BaseModel:
@@ -66,7 +69,7 @@ class BaseModel:
         dictionary['created_at'] = self.created_at.isoformat()
         dictionary['updated_at'] = self.updated_at.isoformat()
         if "_sa_instance_state" in dictionary.keys():
-            del (dictionary["_sa_instance_state"])
+            del dictionary["_sa_instance_state"]
         return dictionary
 
     def delete(self):

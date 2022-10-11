@@ -2,7 +2,7 @@
 """ Console Module """
 import cmd
 import sys
-from models.__init__ import storage
+from models import storage
 from models.engine.file_storage import classes
 import shlex
 
