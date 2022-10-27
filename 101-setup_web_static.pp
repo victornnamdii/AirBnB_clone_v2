@@ -12,7 +12,7 @@ exec { 'apt-get-update':
   command => '/usr/bin/env mkdir -p /data/web_static/shared/',
 }
 -> exec {'e':
-  command => '/usr/bin/env echo "Puppet x Holberton School" > /data/web_static/releases/test/index.html',
+  command => '/usr/bin/env echo "Puppet" > /data/web_static/releases/test/index.html',
 }
 -> exec {'f':
   command => '/usr/bin/env ln -sf /data/web_static/releases/test /data/web_static/current',
