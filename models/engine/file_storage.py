@@ -66,3 +66,7 @@ class FileStorage:
         model = obj.__class__.__name__ + "." + obj.id
         self.all().pop(model)
         self.save()
+
+    def close(self):
+        """Calls the reload method"""
+        self.reload()
