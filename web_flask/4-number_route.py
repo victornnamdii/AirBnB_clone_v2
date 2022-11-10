@@ -40,5 +40,13 @@ def pyroute(text='is cool'):
     return 'Python ' + text.replace('_', ' ')
 
 
+@app.route('/number/<int:n>', strict_slashes=False)
+def number(n):
+    """
+        displays n is anumber if n is an integer
+    """
+    return '{:d} is a number'.format(n)
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
